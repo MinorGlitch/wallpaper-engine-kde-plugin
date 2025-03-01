@@ -21,8 +21,9 @@ Requires: plasma-workspace gstreamer1-libav mpv-libs lz4 python3-websockets qt5-
 %prep
 %setup -q -n %{name}-%{commit}
 %setup -T -D -a 1 -n %{name}-%{commit}
-rm -r src/backend_scene/third_party/glslang
-ln -Tfs ../../../glslang-%{glslang_ver} src/backend_scene/third_party/glslang
+
+rm -rf src/backend_scene
+git clone --recurse-submodules https://github.com/catsout/wallpaper-scene-renderer.git src/backend_scene
 
 %global _enable_debug_package 0
 %global debug_package %{nil}
@@ -30,7 +31,7 @@ ln -Tfs ../../../glslang-%{glslang_ver} src/backend_scene/third_party/glslang
 %build
 mkdir -p build && cd build
 cmake .. -DUSE_PLASMAPKG=ON
-%make_build
+%make_build 
 
 %install
 rm -rf $RPM_BUILD_ROOT
